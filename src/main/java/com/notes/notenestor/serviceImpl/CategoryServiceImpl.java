@@ -32,7 +32,7 @@ public class CategoryServiceImpl implements CategoryService {
         Category category =   mapper.map(categoryDto, Category.class);
 
         if(ObjectUtils.isEmpty(categoryDto.getId())){
-            //internally
+            //internally add
             category.setIsDeleted(false);
             category.setCreatedBy(1);   // user id put
             category.setCreatedDate(new Date());
