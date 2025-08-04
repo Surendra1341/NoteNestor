@@ -3,6 +3,7 @@ package com.notes.notenestor.controller;
 import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.dto.CategoryResponse;
 import com.notes.notenestor.entity.Category;
+import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.service.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -59,13 +60,15 @@ public class CategoryController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) {
-       CategoryDto categoryDto=  categoryService.getCategoryById(id);
+    public ResponseEntity<?> getCategoryById(@PathVariable Integer id) throws ResourceNotFoundException {
 
-        if(ObjectUtils.isEmpty(categoryDto)) {
-            return new ResponseEntity<>("Category not found with id: "+id,HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+          CategoryDto categoryDto=  categoryService.getCategoryById(id);
+
+          if(ObjectUtils.isEmpty(categoryDto)) {
+              return new ResponseEntity<>("Category not found with id: "+id,HttpStatus.NOT_FOUND);
+          }
+          return new ResponseEntity<>(categoryDto, HttpStatus.OK);
+
     }
 
 
