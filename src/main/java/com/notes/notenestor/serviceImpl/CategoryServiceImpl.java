@@ -3,6 +3,7 @@ package com.notes.notenestor.serviceImpl;
 import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.dto.CategoryResponse;
 import com.notes.notenestor.entity.Category;
+import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.repository.CategoryRepo;
 import com.notes.notenestor.service.CategoryService;
 import org.modelmapper.ModelMapper;
@@ -81,14 +82,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public CategoryDto getCategoryById(Integer id) {
-        Optional<Category> category = categoryRepo.findByIdAndIsDeletedFalse(id);
+    public CategoryDto getCategoryById(Integer id) throws ResourceNotFoundException {
+        Category category = categoryRepo.findByIdAndIsDeletedFalse(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with the id " + id));
 
-        if(category.isPresent()) {
-            return mapper.map(category.get(), CategoryDto.class);
-        }
-        return null;
+        return mapper.map(category, CategoryDto.class);
     }
+
 
     @Override
     public Boolean deleteCategoryById(Integer id) {
