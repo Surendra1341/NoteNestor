@@ -18,17 +18,17 @@ public class CategoryDto {
 
     private Integer id;
 
-    @NotBlank
-    @Min(value = 1)
-    @Max(value = 20)
+//    @NotBlank
+//    @Min(value = 1)
+//    @Max(value = 20)
     private String name;
 
-    @NotBlank
-    @Min(value = 1)
-    @Max(value = 100)
+//    @NotBlank
+//    @Min(value = 1)
+//    @Max(value = 100)
     private String description;
 
-    @NotNull
+//    @NotNull
     private Boolean isActive;
 
     private Integer createdBy;
