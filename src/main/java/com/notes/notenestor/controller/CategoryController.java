@@ -5,6 +5,7 @@ import com.notes.notenestor.dto.CategoryResponse;
 import com.notes.notenestor.entity.Category;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.service.CategoryService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class CategoryController {
 
 
     @PostMapping("/save-category")
-    public ResponseEntity<?> saveCategory(@RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<?> saveCategory(@Valid @RequestBody CategoryDto categoryDto) {
         Boolean result = categoryService.saveCategory(categoryDto);
         if (result) {
             return new ResponseEntity<>("Saved successful", HttpStatus.CREATED);
