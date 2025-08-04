@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 @RestController
 @RequestMapping("/api/v1/category")
@@ -36,6 +37,8 @@ public class CategoryController {
 
     @GetMapping("/category")
     public ResponseEntity<?> getAllCategory() {
+
+
         List<CategoryDto> allCategory = categoryService.getAllCategories();
 
         if(CollectionUtils.isEmpty(allCategory)) {
