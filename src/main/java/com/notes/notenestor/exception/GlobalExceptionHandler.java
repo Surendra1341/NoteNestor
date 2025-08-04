@@ -49,5 +49,11 @@ public class GlobalExceptionHandler {
         return  new ResponseEntity<>("error hai :"+e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(ValidationException.class)
+    public ResponseEntity<?> handleValidationException(ValidationException e) {
+        log.error("GlobalExceptionHandler :: handle ValidationException ::"+e.getError());
+        return  new ResponseEntity<>(e.getError(), HttpStatus.NOT_FOUND);
+    }
+
 
 }
