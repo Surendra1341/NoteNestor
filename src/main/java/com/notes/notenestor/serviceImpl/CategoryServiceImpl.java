@@ -6,6 +6,7 @@ import com.notes.notenestor.entity.Category;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.repository.CategoryRepo;
 import com.notes.notenestor.service.CategoryService;
+import com.notes.notenestor.util.Validation;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,17 @@ public class CategoryServiceImpl implements CategoryService {
     private ModelMapper mapper;
 
 
+    @Autowired
+    private Validation validation;
+
+
     @Override
     public Boolean saveCategory(CategoryDto categoryDto) {
+
+
+        //validation checking  --> handle
+        validation.categoryValidation(categoryDto);
+
 
         //mapper  -> use
         Category category =   mapper.map(categoryDto, Category.class);
