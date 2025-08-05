@@ -1,8 +1,10 @@
 package com.notes.notenestor.exception;
 
+import com.notes.notenestor.util.CommonUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,25 +37,50 @@ public class GlobalExceptionHandler {
            String field = ((FieldError)(objectError)).getField();
             error.put(field, msg);
        });
-       return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+
+        return  CommonUtil.createErrorResponse(error, HttpStatus.BAD_REQUEST);
+//       return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<?> handleNullPointerException(NullPointerException e) {
         log.error("GlobalExceptionHandler :: handleNullPointerException ::"+e.getMessage());
-    return  new ResponseEntity<>("error null pointer  :"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return  CommonUtil.createErrorResponseMessage("error null pointer  :"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+//    return  new ResponseEntity<>("error null pointer  :"+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleResourceNotFoundException(Exception e) {
         log.error("GlobalExceptionHandler :: handle ResourceNotFoundException ::"+e.getMessage());
-        return  new ResponseEntity<>("error hai :"+e.getMessage(), HttpStatus.NOT_FOUND);
+
+        return  CommonUtil.createErrorResponseMessage("error hai :"+e.getMessage(), HttpStatus.NOT_FOUND);
+//        return  new ResponseEntity<>("error hai :"+e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<?> handleValidationException(ValidationException e) {
         log.error("GlobalExceptionHandler :: handle ValidationException ::"+e.getError());
-        return  new ResponseEntity<>(e.getError(), HttpStatus.NOT_FOUND);
+
+        return  CommonUtil.createErrorResponse(e.getError(), HttpStatus.NOT_FOUND);
+//        return  new ResponseEntity<>(e.getError(), HttpStatus.NOT_FOUND);
     }
 
+
+    @ExceptionHandler(ExistDataException.class)
+    public ResponseEntity<?> handleExistDataException(ExistDataException e) {
+        log.error("GlobalExceptionHandler :: handle ExistDataException ::"+e.getMessage());
+
+        return  CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.CONFLICT);
+//        return  new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
+    }
+
+//    HttpMessageNotReadableException
+@ExceptionHandler(HttpMessageNotReadableException.class)
+public ResponseEntity<?> handleHttpMessageNotReadableException(ExistDataException e) {
+    log.error("GlobalExceptionHandler :: handle HttpMessageNotReadableException ::"+e.getMessage());
+
+    return  CommonUtil.createErrorResponseMessage(e.getMessage(),  HttpStatus.BAD_REQUEST);
+//    return  new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+}
 
 }

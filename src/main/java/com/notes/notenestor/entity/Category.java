@@ -1,12 +1,10 @@
 package com.notes.notenestor.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.util.Date;
 
@@ -14,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EntityListeners(AuditingEntityListener.class)  // auditing
 public class Category extends BaseModel {
 
     @Id
@@ -23,6 +22,10 @@ public class Category extends BaseModel {
     private String name;
 
     private String description;
+
+    private Boolean isActive;
+
+    private Boolean isDeleted;
 
 
 }
