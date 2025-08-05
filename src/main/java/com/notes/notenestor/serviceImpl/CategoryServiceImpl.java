@@ -3,6 +3,7 @@ package com.notes.notenestor.serviceImpl;
 import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.dto.CategoryResponse;
 import com.notes.notenestor.entity.Category;
+import com.notes.notenestor.exception.ExistDataException;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.repository.CategoryRepo;
 import com.notes.notenestor.service.CategoryService;
@@ -38,14 +39,21 @@ public class CategoryServiceImpl implements CategoryService {
         validation.categoryValidation(categoryDto);
 
 
+        // check exist before it so throw an error
+      boolean exist =   categoryRepo.existsByName(categoryDto.getName().trim());
+      if(exist) {
+        throw new ExistDataException("Category already exists");
+      }
+
+
         //mapper  -> use
         Category category =   mapper.map(categoryDto, Category.class);
 
         if(ObjectUtils.isEmpty(categoryDto.getId())){
             //internally add
             category.setIsDeleted(false);
-            category.setCreatedBy(1);   // user id put
-            category.setCreatedDate(new Date());
+//            category.setCreatedBy(1);   // user id put
+//            category.setCreatedDate(new Date());
         }else{
             // update request
             updateCategory(category);
@@ -62,8 +70,9 @@ public class CategoryServiceImpl implements CategoryService {
             category.setCreatedDate(existCategory.getCreatedDate());
             category.setIsDeleted(false);
 
-            category.setUpdatedBy(1);
-            category.setUpdatedDate(new Date());
+            //can be done through auditing now
+//            category.setUpdatedBy(1);
+//            category.setUpdatedDate(new Date());
 
         }
 
