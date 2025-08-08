@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.FileNotFoundException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,5 +83,13 @@ public ResponseEntity<?> handleHttpMessageNotReadableException(ExistDataExceptio
     return  CommonUtil.createErrorResponseMessage(e.getMessage(),  HttpStatus.BAD_REQUEST);
 //    return  new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
 }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    public ResponseEntity<?> handleFileNotFoundException(ExistDataException e) {
+        log.error("GlobalExceptionHandler :: handle FileNotFoundException ::"+e.getMessage());
+
+        return  CommonUtil.createErrorResponseMessage(e.getMessage(),  HttpStatus.NOT_FOUND);
+//    return  new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
 
 }

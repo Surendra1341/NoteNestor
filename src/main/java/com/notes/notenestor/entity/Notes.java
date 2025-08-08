@@ -6,6 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Date;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -28,5 +32,9 @@ public class Notes extends BaseModel {
     private FileDetails fileDetails;
 
     private Integer userId;
+
+    private Boolean isDeleted;
+
+    private LocalDateTime deletedAt;
 
 }
