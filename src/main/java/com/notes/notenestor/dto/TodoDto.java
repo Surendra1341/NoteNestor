@@ -1,6 +1,7 @@
 package com.notes.notenestor.dto;
 
 
+import jdk.dynalink.beans.StaticClass;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class TodoDto {
 
-    private Integer id;
+    private Integer id;;
 
     private String title;
 
@@ -31,7 +32,7 @@ public class TodoDto {
     @AllArgsConstructor
     @NoArgsConstructor
     @Builder
-    public static class StatusDto {
+    public static class StatusDto{
         private Integer id;
         private String name;
 

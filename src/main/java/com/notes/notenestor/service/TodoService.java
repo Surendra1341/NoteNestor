@@ -2,14 +2,15 @@ package com.notes.notenestor.service;
 
 import com.notes.notenestor.dto.TodoDto;
 import com.notes.notenestor.exception.ResourceNotFoundException;
+import org.w3c.dom.stylesheets.LinkStyle;
 
 import java.util.List;
 
 public interface TodoService {
 
-    Boolean saveTodo(TodoDto todo) throws ResourceNotFoundException;
+    public Boolean saveTodo(TodoDto todo) throws ResourceNotFoundException;
 
-    TodoDto getTodoById(Integer id) throws ResourceNotFoundException;
+    public TodoDto getTodoById(Integer id) throws ResourceNotFoundException;
 
-    List<TodoDto> getTodoByUser(Integer id);
+    public List<TodoDto> getTodoByUser(Integer id);
 }

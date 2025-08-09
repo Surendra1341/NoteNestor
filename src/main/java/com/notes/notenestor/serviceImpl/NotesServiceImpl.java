@@ -24,10 +24,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
@@ -64,8 +61,9 @@ public class NotesServiceImpl implements NotesService {
         notesDto.setIsDeleted(false);
         notesDto.setDeletedAt(null);
         // if id is given then a request for update
-        if (!ObjectUtils.isEmpty(notesDto.getId())) {
-            updateNotes(notesDto, file);
+        if(!ObjectUtils.isEmpty(notesDto.getId()))
+        {
+            updateNotes(notesDto,file);
 
         }
 
@@ -101,14 +99,14 @@ public class NotesServiceImpl implements NotesService {
     }
 
     private void updateNotes(NotesDto notesDto, MultipartFile file) throws ResourceNotFoundException {
-        Notes existNotes = notesRepo.findById(notesDto.getId()).orElseThrow(() -> new ResourceNotFoundException("invalid notes id for update"));
+     Notes existNotes =  notesRepo.findById(notesDto.getId()).orElseThrow(()->new ResourceNotFoundException("invalid notes id for update"));
 
-        // agr file nhi di to purani wali lgao or baki chize same rahegi
+     // agr file nhi di to purani wali lgao or baki chize same rahegi
         if (ObjectUtils.isEmpty(file)) {
             notesDto.setFileDetails(mapper.map(existNotes.getFileDetails(), NotesDto.FileDto.class));
         }
 
-    }
+        }
 
     private FileDetails saveFileDetails(MultipartFile file) throws IOException {
         if (!ObjectUtils.isEmpty(file) && !file.isEmpty()) {
@@ -182,6 +180,8 @@ public class NotesServiceImpl implements NotesService {
     }
 
 
+
+
     @Override
     public byte[] downloadFile(FileDetails fileDetails) throws ResourceNotFoundException, IOException {
         // logic
@@ -194,7 +194,7 @@ public class NotesServiceImpl implements NotesService {
     @Override
     public FileDetails getFileDetails(Integer id) throws ResourceNotFoundException {
         return fileRepo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("file is not available"));
+                .orElseThrow(()->new ResourceNotFoundException("file is not available"));
 
     }
 
@@ -202,12 +202,12 @@ public class NotesServiceImpl implements NotesService {
     public NotesResponse getAllNotesByUser(Integer userID, Integer pageNo, Integer pageSize) {
 
 
-        Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<Notes> notes = notesRepo.findByCreatedByAndIsDeletedFalse(userID, pageable);
+        Pageable pageable = PageRequest.of(pageNo,pageSize);
+        Page<Notes> notes = notesRepo.findByCreatedByAndIsDeletedFalse(userID,pageable);
 
-        List<NotesDto> notesDto = notes.get().map(n -> mapper.map(n, NotesDto.class)).toList();
+        List<NotesDto> notesDto = notes.get().map(n->mapper.map(n, NotesDto.class)).toList();
 
-        NotesResponse notesResponse = NotesResponse.builder()
+        NotesResponse notesResponse =NotesResponse.builder()
                 .notes(notesDto)
                 .pageNo(notes.getNumber())
                 .pageSize(notes.getSize())
@@ -224,7 +224,7 @@ public class NotesServiceImpl implements NotesService {
 
     @Override
     public void softDeleteNotes(Integer id) throws ResourceNotFoundException {
-        Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Notes id invalid "));
+     Notes notes =   notesRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Notes id invalid "));
         notes.setIsDeleted(true);
         notes.setDeletedAt(LocalDateTime.now());
         notesRepo.save(notes);
@@ -232,7 +232,7 @@ public class NotesServiceImpl implements NotesService {
 
     @Override
     public void restoreNotes(Integer id) throws ResourceNotFoundException {
-        Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Notes id invalid "));
+        Notes notes =   notesRepo.findById(id).orElseThrow(()->new ResourceNotFoundException("Notes id invalid "));
         notes.setIsDeleted(false);
         notes.setDeletedAt(null);
         notesRepo.save(notes);
@@ -241,9 +241,9 @@ public class NotesServiceImpl implements NotesService {
     @Override
     public List<NotesDto> getUserRecycleBInNotes(Integer userID) {
 
-        List<NotesDto> notes = notesRepo
+        List<NotesDto> notes= notesRepo
                 .findByCreatedByAndIsDeletedTrue(userID).
-                stream().map(n -> mapper.map(n, NotesDto.class))
+                stream().map(n -> mapper.map(n,NotesDto.class))
                 .toList();
 
         return notes;
@@ -251,30 +251,30 @@ public class NotesServiceImpl implements NotesService {
 
     @Override
     public void hardDeleteNotes(Integer id) throws ResourceNotFoundException {
-        Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("notes not found"));
+        Notes notes = notesRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("notes not found"));
 
-        if (notes.getIsDeleted()) {
-            notesRepo.delete(notes);
-        } else {
-            throw new IllegalArgumentException("Sorry u can't delete directly");
-        }
+       if( notes.getIsDeleted() ) {
+           notesRepo.delete(notes);
+       }else {
+           throw new IllegalArgumentException("Sorry u can't delete directly");
+       }
     }
 
     @Override
     public void emptyRecycleBin(int userID) {
 
-        List<Notes> recycleNotes = notesRepo.findByCreatedByAndIsDeletedTrue(userID);
+        List<Notes> recycleNotes= notesRepo.findByCreatedByAndIsDeletedTrue(userID);
 
-        if (!CollectionUtils.isEmpty(recycleNotes)) {
+        if(!CollectionUtils.isEmpty(recycleNotes)) {
             notesRepo.deleteAll(recycleNotes);
         }
     }
 
     @Override
     public boolean copyNotes(Integer id) throws ResourceNotFoundException {
-        Notes notes = notesRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("notes not found"));
+        Notes notes = notesRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("notes not found"));
 
-        Notes copy = Notes.builder()
+        Notes copy= Notes.builder()
                 .title(notes.getTitle())
                 .description(notes.getDescription())
                 .category(notes.getCategory())
