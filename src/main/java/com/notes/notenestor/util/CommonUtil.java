@@ -1,10 +1,9 @@
 package com.notes.notenestor.util;
 
-import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.handler.GenericResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public class CommonUtil {
@@ -76,5 +75,11 @@ public class CommonUtil {
             default:
                 return "application/octet-stream";
         }
+    }
+
+    public static String getUrl(HttpServletRequest request) {
+        String fullUrl = request.getRequestURL().toString();  // http://localhost:8080/api/v1/auth/
+        String path = request.getServletPath();  //  /api/v1/auth/
+        return fullUrl.replace(path, "");  //  http://localhost:8080
     }
 }
