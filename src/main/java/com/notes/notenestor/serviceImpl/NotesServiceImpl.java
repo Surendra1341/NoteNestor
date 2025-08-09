@@ -29,7 +29,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -269,6 +268,25 @@ public class NotesServiceImpl implements NotesService {
         if(!CollectionUtils.isEmpty(recycleNotes)) {
             notesRepo.deleteAll(recycleNotes);
         }
-
     }
+
+    @Override
+    public boolean copyNotes(Integer id) throws ResourceNotFoundException {
+        Notes notes = notesRepo.findById(id).orElseThrow(()-> new ResourceNotFoundException("notes not found"));
+
+        Notes copy= Notes.builder()
+                .title(notes.getTitle())
+                .description(notes.getDescription())
+                .category(notes.getCategory())
+                .isDeleted(false)
+                .fileDetails(null)
+                .build();
+
+        // check user validation
+
+
+        return !ObjectUtils.isEmpty(notesRepo.save(copy));
+    }
+
+
 }
