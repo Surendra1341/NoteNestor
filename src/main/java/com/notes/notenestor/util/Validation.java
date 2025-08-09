@@ -3,11 +3,16 @@ package com.notes.notenestor.util;
 
 import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.dto.TodoDto;
+import com.notes.notenestor.dto.UserDto;
 import com.notes.notenestor.enums.TodoStatus;
+import com.notes.notenestor.exception.ExistDataException;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.exception.ValidationException;
+import com.notes.notenestor.repository.UserRepo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.View;
 
 import java.util.HashMap;
@@ -15,6 +20,9 @@ import java.util.Map;
 
 @Component
 public class Validation {
+
+    @Autowired
+    private UserRepo userRepo;
 
 
     public void categoryValidation(CategoryDto categoryDto) {
@@ -75,6 +83,26 @@ public class Validation {
 
         if(!statusFound){
             throw new ResourceNotFoundException("invalid status value");
+        }
+    }
+
+
+    public void userValidation(UserDto userDto) {
+
+        // name validate
+        if (!StringUtils.hasText(userDto.getName())) {
+            throw new IllegalArgumentException(" name is invalid");
+        }
+
+
+        if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+            throw new IllegalArgumentException("email is invalid");
+        } else {
+            // validate email exist
+            Boolean existEmail = userRepo.existsByEmail(userDto.getEmail());
+            if (existEmail) {
+                throw new ExistDataException("Email already exist");
+            }
         }
     }
 }
