@@ -1,7 +1,6 @@
 package com.notes.notenestor.dto;
 
 
-import com.notes.notenestor.entity.Category;
 import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,7 +42,7 @@ public class NotesDto {
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class CategoryDto{
+    public static class CategoryDto {
         private Integer id;
         private String name;
     }
@@ -57,7 +56,6 @@ public class NotesDto {
         private String originalFileName;
 
         private String displayFileName;
-
 
 
     }

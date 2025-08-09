@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -27,10 +26,10 @@ public class GenericResponse {
     private HttpStatus responseStatus;
 
     public ResponseEntity<?> create() {
-        Map<String,Object> map = new LinkedHashMap<>();
+        Map<String, Object> map = new LinkedHashMap<>();
         map.put("status", status);
         map.put("message", message);
-        if(!ObjectUtils.isEmpty(data)) map.put("data", data);
+        if (!ObjectUtils.isEmpty(data)) map.put("data", data);
 
         return new ResponseEntity<>(map, responseStatus);
     }
