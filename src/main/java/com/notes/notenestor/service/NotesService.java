@@ -33,4 +33,6 @@ public interface NotesService {
     void hardDeleteNotes(Integer id) throws ResourceNotFoundException;
 
     void emptyRecycleBin(int userID);
+
+    boolean copyNotes(Integer id) throws ResourceNotFoundException;
 }

@@ -7,36 +7,21 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Date;
-
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)  // auditing
 @Builder
-public class Notes extends BaseModel {
+public class Todo extends BaseModel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Integer id;;
 
     private String title;
 
-    private String description;
+    private Integer statusId;
 
-    @ManyToOne
-    private Category category;
-
-    @ManyToOne
-    private FileDetails fileDetails;
-
-    private Integer userId;
-
-    private Boolean isDeleted;
-
-    private LocalDateTime deletedAt;
 
 }

@@ -131,14 +131,18 @@ public class NotesController {
     }
 
 
+    //add favorite if need -> upcoming features
 
 
 
-
-
-
-
-
+    @GetMapping("/copy/{id}")
+    public ResponseEntity<?> copyNotes(@PathVariable Integer id) throws ResourceNotFoundException {
+        boolean copied =notesService.copyNotes(id);
+        if (copied){
+            return CommonUtil.createBuildResponseMessage("Copy success :)", HttpStatus.OK);
+        }
+        return CommonUtil.createErrorResponseMessage("Copy Failed", HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 
 

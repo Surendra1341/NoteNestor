@@ -2,6 +2,9 @@ package com.notes.notenestor.util;
 
 
 import com.notes.notenestor.dto.CategoryDto;
+import com.notes.notenestor.dto.TodoDto;
+import com.notes.notenestor.enums.TodoStatus;
+import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.exception.ValidationException;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
@@ -55,5 +58,23 @@ public class Validation {
             throw new ValidationException(errors);
         }
 
+    }
+
+
+    public void todoValidation(TodoDto todo) throws ResourceNotFoundException {
+
+        TodoDto.StatusDto reqStatus =todo.getStatus();
+
+        Boolean statusFound = false;
+        for (TodoStatus status :TodoStatus.values() ){
+            if(status.getId().equals(reqStatus.getId())){
+                statusFound = true;
+
+            }
+        }
+
+        if(!statusFound){
+            throw new ResourceNotFoundException("invalid status value");
+        }
     }
 }
