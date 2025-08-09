@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,21 +39,21 @@ public class CategoryServiceImpl implements CategoryService {
 
 
         // check exist before it so throw an error
-      boolean exist =   categoryRepo.existsByName(categoryDto.getName().trim());
-      if(exist) {
-        throw new ExistDataException("Category already exists");
-      }
+        boolean exist = categoryRepo.existsByName(categoryDto.getName().trim());
+        if (exist) {
+            throw new ExistDataException("Category already exists");
+        }
 
 
         //mapper  -> use
-        Category category =   mapper.map(categoryDto, Category.class);
+        Category category = mapper.map(categoryDto, Category.class);
 
-        if(ObjectUtils.isEmpty(categoryDto.getId())){
+        if (ObjectUtils.isEmpty(categoryDto.getId())) {
             //internally add
             category.setIsDeleted(false);
 //            category.setCreatedBy(1);   // user id put
 //            category.setCreatedDate(new Date());
-        }else{
+        } else {
             // update request
             updateCategory(category);
         }
@@ -64,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private void updateCategory(Category category) {
         Optional<Category> findById = categoryRepo.findById(category.getId());
-        if(findById.isPresent()){
+        if (findById.isPresent()) {
             Category existCategory = findById.get();
             category.setCreatedBy(existCategory.getCreatedBy());
             category.setCreatedDate(existCategory.getCreatedDate());
@@ -113,7 +112,7 @@ public class CategoryServiceImpl implements CategoryService {
     public Boolean deleteCategoryById(Integer id) {
         Optional<Category> category = categoryRepo.findById(id);
 
-        if(category.isPresent()) {
+        if (category.isPresent()) {
             category.get().setIsDeleted(true);
             categoryRepo.save(category.get());
             return true;

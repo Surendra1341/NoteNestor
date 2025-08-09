@@ -19,12 +19,12 @@ public class NotesSchedular {
         this.notesRepo = notesRepo;
     }
 
-        @Scheduled(cron = "0 0 0 * * ?")
-    public void deleteNotesSchedular(){
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void deleteNotesSchedular() {
         // 09 / 08/ 2025   - 7days =->
-        LocalDateTime  cutOffDate = LocalDateTime.now().minusDays(7);
+        LocalDateTime cutOffDate = LocalDateTime.now().minusDays(7);
 
-        List<Notes> deleteNotes =notesRepo.findAllByIsDeletedAndDeletedAtBefore(true,cutOffDate);
+        List<Notes> deleteNotes = notesRepo.findAllByIsDeletedAndDeletedAtBefore(true, cutOffDate);
 
         notesRepo.deleteAll(deleteNotes);  // delete permanent
     }

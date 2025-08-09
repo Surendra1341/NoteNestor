@@ -13,24 +13,26 @@ import java.util.List;
 public interface NotesService {
 
 
-    public Boolean saveNote(String Notes, MultipartFile file) throws ResourceNotFoundException, IOException;
+    Boolean saveNote(String Notes, MultipartFile file) throws ResourceNotFoundException, IOException;
 
-    public List<NotesDto> getAllNotes();
+    List<NotesDto> getAllNotes();
 
 
-    public byte[] downloadFile(FileDetails fileDetails) throws ResourceNotFoundException, IOException;
+    byte[] downloadFile(FileDetails fileDetails) throws ResourceNotFoundException, IOException;
 
-   public FileDetails getFileDetails(Integer id) throws ResourceNotFoundException;
+    FileDetails getFileDetails(Integer id) throws ResourceNotFoundException;
 
-    public NotesResponse getAllNotesByUser(Integer userID, Integer pageNo, Integer pageSize);
+    NotesResponse getAllNotesByUser(Integer userID, Integer pageNo, Integer pageSize);
 
-    public void softDeleteNotes(Integer id) throws ResourceNotFoundException;
+    void softDeleteNotes(Integer id) throws ResourceNotFoundException;
 
-    public void restoreNotes(Integer id) throws ResourceNotFoundException;
+    void restoreNotes(Integer id) throws ResourceNotFoundException;
 
     List<NotesDto> getUserRecycleBInNotes(Integer userID);
 
     void hardDeleteNotes(Integer id) throws ResourceNotFoundException;
 
     void emptyRecycleBin(int userID);
+
+    boolean copyNotes(Integer id) throws ResourceNotFoundException;
 }
