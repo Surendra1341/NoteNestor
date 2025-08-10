@@ -23,7 +23,7 @@ public class User {
 
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)  //sath mai save ho jaye
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)  //sath mai save ho jaye
     @JoinColumn(name = "status_id")
     private AccountStatus status;
 

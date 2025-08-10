@@ -5,7 +5,6 @@ import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.exception.SuccessException;
 import com.notes.notenestor.repository.UserRepo;
 import com.notes.notenestor.service.HomeService;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +18,13 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public Boolean verifyUserAccount(Integer uid, String token) throws ResourceNotFoundException {
-        User user = userRepo.findById(uid).orElseThrow(()->new ResourceNotFoundException("Invalid user"));
+        User user = userRepo.findById(uid).orElseThrow(() -> new ResourceNotFoundException("Invalid user"));
 
-        if(user.getStatus().getVerificationCode()==null) {
+        if (user.getStatus().getVerificationCode() == null) {
             throw new SuccessException("Account Already Verified");
         }
 
-        if(user.getStatus().getVerificationCode().equals(token)) {
+        if (user.getStatus().getVerificationCode().equals(token)) {
             user.getStatus().setVerificationCode(null);
             user.getStatus().setIsActive(true);
 

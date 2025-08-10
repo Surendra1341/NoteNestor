@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
-import org.springframework.web.servlet.View;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,26 +28,26 @@ public class Validation {
 
         Map<String, Object> errors = new HashMap<>();
 
-        if(ObjectUtils.isEmpty(categoryDto)) {
-            throw new  IllegalArgumentException("category obj / JSON shouldn't be null / empty");
-        }else{
+        if (ObjectUtils.isEmpty(categoryDto)) {
+            throw new IllegalArgumentException("category obj / JSON shouldn't be null / empty");
+        } else {
 
             // name ke lye
-            if(ObjectUtils.isEmpty(categoryDto.getName())) {
+            if (ObjectUtils.isEmpty(categoryDto.getName())) {
                 errors.put("name", "Name field is  null / empty");
-            }else {
+            } else {
 
-                if(categoryDto.getName().length() > 20) {
+                if (categoryDto.getName().length() > 20) {
                     errors.put("name", "Name field is longer than 20 characters");
                 }
             }
 
             // description ke lye
-            if(ObjectUtils.isEmpty(categoryDto.getDescription())) {
+            if (ObjectUtils.isEmpty(categoryDto.getDescription())) {
                 errors.put("description", "description field is  null / empty");
-            }else {
+            } else {
 
-                if(categoryDto.getDescription().length() > 100) {
+                if (categoryDto.getDescription().length() > 100) {
                     errors.put("description", "description field is longer than 100 characters");
                 }
             }
@@ -62,7 +61,7 @@ public class Validation {
 
         }
 
-        if(!errors.isEmpty()) {
+        if (!errors.isEmpty()) {
             throw new ValidationException(errors);
         }
 
@@ -71,17 +70,18 @@ public class Validation {
 
     public void todoValidation(TodoDto todo) throws ResourceNotFoundException {
 
-        TodoDto.StatusDto reqStatus =todo.getStatus();
+        TodoDto.StatusDto reqStatus = todo.getStatus();
 
         Boolean statusFound = false;
-        for (TodoStatus status :TodoStatus.values() ){
-            if(status.getId().equals(reqStatus.getId())){
+        for (TodoStatus status : TodoStatus.values()) {
+            if (status.getId().equals(reqStatus.getId())) {
                 statusFound = true;
 
+                break;
             }
         }
 
-        if(!statusFound){
+        if (!statusFound) {
             throw new ResourceNotFoundException("invalid status value");
         }
     }
