@@ -2,13 +2,13 @@ package com.notes.notenestor.enums;
 
 public enum TodoStatus {
 
-    NOT_STARTED(1,"Not Started"),IN_PROGRESS(2,"In progess"),COMPLETED(3,"Complted");
+    NOT_STARTED(1, "Not Started"), IN_PROGRESS(2, "In progess"), COMPLETED(3, "Complted");
 
     private Integer id;
 
     private String name;
 
-    TodoStatus(Integer i,String string) {
+    TodoStatus(Integer i, String string) {
         this.id = i;
         this.name = string;
     }
