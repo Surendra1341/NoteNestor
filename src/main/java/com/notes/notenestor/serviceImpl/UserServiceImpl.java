@@ -1,16 +1,24 @@
 package com.notes.notenestor.serviceImpl;
 
+import com.notes.notenestor.config.security.CustomUserDetails;
 import com.notes.notenestor.dto.EmailRequest;
+import com.notes.notenestor.dto.LoginRequest;
+import com.notes.notenestor.dto.LoginResponse;
 import com.notes.notenestor.dto.UserDto;
 import com.notes.notenestor.entity.AccountStatus;
 import com.notes.notenestor.entity.User;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.repository.UserRepo;
+import com.notes.notenestor.service.JwtService;
 import com.notes.notenestor.service.UserService;
 import com.notes.notenestor.util.Validation;
 import jakarta.mail.MessagingException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
 
@@ -34,16 +42,25 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private EmailService emailService;
 
+    @Autowired
+    private AuthenticationManager authenticationManager;
+
+
+    @Autowired
+    private BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtService jwtService;
 
     @Override
-    public Boolean register(UserDto userDto,String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
+    public Boolean register(UserDto userDto, String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
         // validation
         validation.userValidation(userDto);
 
-        User user =mapper.map(userDto, User.class);
+        User user = mapper.map(userDto, User.class);
 
         //internally
-        AccountStatus status =AccountStatus
+        AccountStatus status = AccountStatus
                 .builder()
                 .isActive(false)
                 .verificationCode(UUID.randomUUID().toString())
@@ -51,11 +68,14 @@ public class UserServiceImpl implements UserService {
         user.setStatus(status);
 
 
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+
+
         User savedUser = userRepo.save(user);
 
-        if (!ObjectUtils.isEmpty(savedUser)){
+        if (!ObjectUtils.isEmpty(savedUser)) {
             //mail send logic
-            emailSend(savedUser,apiUrl);
+            emailSend(savedUser, apiUrl);
 
 
             return true;
@@ -64,26 +84,33 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        Authentication authenticate = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 
+        if (authenticate.isAuthenticated()) {
+            CustomUserDetails userDetails = (CustomUserDetails) authenticate.getPrincipal();
 
+            String token = jwtService.generateToken(userDetails.getUser());
+            LoginResponse loginResponse = LoginResponse.builder()
+                    .user(mapper.map(userDetails.getUser(), UserDto.class))
+                    .token(token)
+                    .build();
 
+            return loginResponse;
+        }
+        return null;
 
-
-
-
-
-
-
-
-
+    }
 
 
     // email content for registration
 
-    private void emailSend(User savedUser,String apiUrl) throws MessagingException, UnsupportedEncodingException {
+    private void emailSend(User savedUser, String apiUrl) throws MessagingException, UnsupportedEncodingException {
 
-        String url =apiUrl+"/api/v1/home/verify";
+        String url = apiUrl + "/api/v1/home/verify";
 
 
         String message = "<!DOCTYPE html>"
@@ -110,7 +137,7 @@ public class UserServiceImpl implements UserService {
                 + "<p>Thanks for registering with us. We're excited to have you on board! 🎉</p>"
                 + "<p>Please verify your account by clicking the button below:</p>"
                 + "<a href=\"" + url + "?uid=" + savedUser.getId() +
-                "&token=" + savedUser.getStatus().getVerificationCode() + "\" class='button'>Verify My Account</a>"+ "<p>If you didn’t create this account, you can safely ignore this email.</p>"
+                "&token=" + savedUser.getStatus().getVerificationCode() + "\" class='button'>Verify My Account</a>" + "<p>If you didn’t create this account, you can safely ignore this email.</p>"
                 + "</div>"
                 + "<div class='footer'>"
                 + "<p>Thanks,<br><b>The NoteNestor Team</b></p>"

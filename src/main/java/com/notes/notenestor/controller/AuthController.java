@@ -24,16 +24,15 @@ public class AuthController {
     private UserService userService;
 
 
-
     @PostMapping("/")
     public ResponseEntity<?> register(@RequestBody UserDto userDto, HttpServletRequest request) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
-            String url = CommonUtil.getUrl(request);
-            Boolean result = userService.register(userDto,url);
+        String url = CommonUtil.getUrl(request);
+        Boolean result = userService.register(userDto, url);
 
-            if(result){
-                return CommonUtil.createBuildResponseMessage("Register success", HttpStatus.OK);
-            }
-            return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
+        if (result) {
+            return CommonUtil.createBuildResponseMessage("Register success", HttpStatus.OK);
+        }
+        return CommonUtil.createErrorResponseMessage("Register failed", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
