@@ -24,6 +24,9 @@ public interface NotesService {
 
     NotesResponse getAllNotesByUser(Integer userID, Integer pageNo, Integer pageSize);
 
+
+    NotesResponse getAllNotesBySearch(Integer userID, Integer pageNo, Integer pageSize,String keyword);
+
     void softDeleteNotes(Integer id) throws ResourceNotFoundException;
 
     void restoreNotes(Integer id) throws ResourceNotFoundException;
@@ -35,4 +38,6 @@ public interface NotesService {
     void emptyRecycleBin(int userID);
 
     boolean copyNotes(Integer id) throws ResourceNotFoundException;
+
+
 }

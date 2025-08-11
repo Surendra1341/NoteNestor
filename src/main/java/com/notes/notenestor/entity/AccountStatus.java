@@ -28,5 +28,4 @@ public class AccountStatus {
     private String passwordResetToken;
 
 
-
 }
