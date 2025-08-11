@@ -12,7 +12,7 @@ public interface UserService {
     public void changePassword(PasswordChangeRequest passwordRequest);
 
 
-    void sendEmailPasswordReset(String email,String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException;
+    void sendEmailPasswordReset(String email, String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException;
 
     void verifyPasswordResetLink(Integer uid, String token) throws ResourceNotFoundException;
 

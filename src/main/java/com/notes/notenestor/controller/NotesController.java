@@ -87,6 +87,23 @@ public class NotesController {
         return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
     }
 
+    @GetMapping("/search")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
+    public ResponseEntity<?> getAllNotesBySearch(
+            @RequestParam(name = "keyword",defaultValue = "") String keyword,
+            @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+
+    ) throws ResourceNotFoundException {
+        // yha pageNo. follow index type rule
+        Integer userID = CommonUtil.getLoggedInUser().getId();
+
+
+        NotesResponse notes = service.getAllNotesBySearch(userID, pageNo, pageSize,keyword);
+
+        return CommonUtil.createBuildResponse(notes, HttpStatus.OK);
+    }
+
 
     @GetMapping("/delete/{id}")
     public ResponseEntity<?> deleteNotes(@PathVariable Integer id) throws ResourceNotFoundException {

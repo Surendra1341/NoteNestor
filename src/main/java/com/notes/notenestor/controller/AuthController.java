@@ -39,15 +39,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody  LoginRequest loginRequest) throws Exception {
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) throws Exception {
 
         LoginResponse loginResponse = authService.login(loginRequest);
         if (ObjectUtils.isEmpty(loginResponse)) {
             return CommonUtil.createErrorResponseMessage("invalid credential", HttpStatus.BAD_REQUEST);
         }
-        return CommonUtil.createBuildResponse(loginResponse,HttpStatus.OK);
+        return CommonUtil.createBuildResponse(loginResponse, HttpStatus.OK);
     }
-
 
 
 }
