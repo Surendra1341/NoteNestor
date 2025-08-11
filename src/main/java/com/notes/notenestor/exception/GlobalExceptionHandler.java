@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.io.FileNotFoundException;
+import org.springframework.security.access.AccessDeniedException;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,6 +110,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException e) {
         return CommonUtil.createErrorResponseMessage(e.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    //
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
+        return CommonUtil.createErrorResponseMessage("allowed nhi hai", HttpStatus.FORBIDDEN);
     }
 
 

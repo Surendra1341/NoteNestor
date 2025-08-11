@@ -1,8 +1,7 @@
 package com.notes.notenestor.service;
 
-import com.notes.notenestor.dto.LoginRequest;
-import com.notes.notenestor.dto.LoginResponse;
-import com.notes.notenestor.dto.UserDto;
+import com.notes.notenestor.dto.PasswordChangeRequest;
+import com.notes.notenestor.dto.PasswordResetRequest;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import jakarta.mail.MessagingException;
 
@@ -10,7 +9,12 @@ import java.io.UnsupportedEncodingException;
 
 public interface UserService {
 
-    Boolean register(UserDto userDto, String url) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException;
+    public void changePassword(PasswordChangeRequest passwordRequest);
 
-    LoginResponse login(LoginRequest request);
+
+    void sendEmailPasswordReset(String email,String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException;
+
+    void verifyPasswordResetLink(Integer uid, String token) throws ResourceNotFoundException;
+
+    void resetPassword(PasswordResetRequest passwordResetRequest) throws ResourceNotFoundException;
 }
