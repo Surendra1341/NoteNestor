@@ -39,20 +39,20 @@ public class HomeController {
     @GetMapping("/send-email")
     public ResponseEntity<?> sendEmailForPasswordReset(@RequestParam String email, HttpServletRequest request) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
         String url = CommonUtil.getUrl(request);
-       userService.sendEmailPasswordReset(email,url);
-       return CommonUtil.createBuildResponseMessage("Email Send Successfully !! check mail and reset password", HttpStatus.OK);
+        userService.sendEmailPasswordReset(email, url);
+        return CommonUtil.createBuildResponseMessage("Email Send Successfully !! check mail and reset password", HttpStatus.OK);
 
     }
 
     @GetMapping("/verify-password-link")
-    public ResponseEntity<?> verifyPasswordResetToken(@RequestParam Integer uid,@RequestParam String token) throws ResourceNotFoundException {
-        userService.verifyPasswordResetLink(uid,token);
-        return CommonUtil.createBuildResponseMessage("Verified Successfully",HttpStatus.OK);
+    public ResponseEntity<?> verifyPasswordResetToken(@RequestParam Integer uid, @RequestParam String token) throws ResourceNotFoundException {
+        userService.verifyPasswordResetLink(uid, token);
+        return CommonUtil.createBuildResponseMessage("Verified Successfully", HttpStatus.OK);
     }
 
     @PostMapping("/reset-password")
     public ResponseEntity<?> resetPassword(@RequestBody PasswordResetRequest passwordResetRequest) throws ResourceNotFoundException {
-       userService.resetPassword(passwordResetRequest);
+        userService.resetPassword(passwordResetRequest);
         return CommonUtil.createBuildResponseMessage("Password Reset Successfully", HttpStatus.OK);
     }
 }

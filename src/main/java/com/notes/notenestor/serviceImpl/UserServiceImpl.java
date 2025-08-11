@@ -32,21 +32,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void changePassword(PasswordChangeRequest passwordRequest) {
-       User loggedInUser = CommonUtil.getLoggedInUser();
+        User loggedInUser = CommonUtil.getLoggedInUser();
 
-       if(!passwordEncoder.matches(passwordRequest.getOldPassword(), loggedInUser.getPassword())) {
-           throw new IllegalArgumentException("Old password is not correct");
-       }
+        if (!passwordEncoder.matches(passwordRequest.getOldPassword(), loggedInUser.getPassword())) {
+            throw new IllegalArgumentException("Old password is not correct");
+        }
 
-       loggedInUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
-       userRepo.save(loggedInUser);
+        loggedInUser.setPassword(passwordEncoder.encode(passwordRequest.getNewPassword()));
+        userRepo.save(loggedInUser);
 
     }
 
     @Override
-    public void sendEmailPasswordReset(String email,String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
+    public void sendEmailPasswordReset(String email, String apiUrl) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
         User user = userRepo.findByEmail(email);
-        if(ObjectUtils.isEmpty(user)) {
+        if (ObjectUtils.isEmpty(user)) {
             throw new ResourceNotFoundException("Email is invalid");
         }
 
@@ -54,22 +54,22 @@ public class UserServiceImpl implements UserService {
         String resetToken = UUID.randomUUID().toString();
 
         user.getStatus().setPasswordResetToken(resetToken);
-        User updateUser =userRepo.save(user);
+        User updateUser = userRepo.save(user);
 
-        sendPasswordResetEmail(updateUser,apiUrl,resetToken);
+        sendPasswordResetEmail(updateUser, apiUrl, resetToken);
 
     }
 
     @Override
     public void verifyPasswordResetLink(Integer uid, String token) throws ResourceNotFoundException {
-       User user= userRepo.findById(uid).orElseThrow(()->new ResourceNotFoundException("invalid User"));
-      verifyPswdResetLink(user.getStatus().getPasswordResetToken(),token);
+        User user = userRepo.findById(uid).orElseThrow(() -> new ResourceNotFoundException("invalid User"));
+        verifyPswdResetLink(user.getStatus().getPasswordResetToken(), token);
 
     }
 
     @Override
     public void resetPassword(PasswordResetRequest passwordResetRequest) throws ResourceNotFoundException {
-        User user= userRepo.findById(passwordResetRequest.getUid()).orElseThrow(()->new ResourceNotFoundException("invalid User"));
+        User user = userRepo.findById(passwordResetRequest.getUid()).orElseThrow(() -> new ResourceNotFoundException("invalid User"));
         String encodePassword = passwordEncoder.encode(passwordResetRequest.getNewPassword());
         user.setPassword(encodePassword);
         user.getStatus().setPasswordResetToken(null);
@@ -78,16 +78,16 @@ public class UserServiceImpl implements UserService {
 
     private void verifyPswdResetLink(String existToken, String reqToken) {
         // not null
-        if(StringUtils.hasText(reqToken)) {
+        if (StringUtils.hasText(reqToken)) {
             // already reset it
-            if(!StringUtils.hasText(existToken)) {
+            if (!StringUtils.hasText(existToken)) {
                 throw new IllegalArgumentException("Already done");
             }
             // invalid work done
-                if(!reqToken.equals(existToken)) {
-                    throw new IllegalArgumentException("Invalid Url");
-                }
-        }else {
+            if (!reqToken.equals(existToken)) {
+                throw new IllegalArgumentException("Invalid Url");
+            }
+        } else {
             throw new IllegalArgumentException("Invalid Token");
         }
     }
