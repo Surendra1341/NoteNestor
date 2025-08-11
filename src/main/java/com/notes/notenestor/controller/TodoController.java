@@ -8,6 +8,7 @@ import com.notes.notenestor.util.CommonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,7 @@ public class TodoController {
     private TodoService todoService;
 
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> saveTodo(@RequestBody TodoDto todo) throws ResourceNotFoundException {
         Boolean save = todoService.saveTodo(todo);
         if (save) {
@@ -33,16 +35,18 @@ public class TodoController {
     }
 
 
-    @GetMapping("{id}")
-    public ResponseEntity<?> saveTodo(@PathVariable Integer id) throws ResourceNotFoundException {
+    @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
+    public ResponseEntity<?> getTodoById(@PathVariable Integer id) throws ResourceNotFoundException {
         TodoDto save = todoService.getTodoById(id);
         return CommonUtil.createBuildResponse(save, HttpStatus.OK);
 
     }
 
     @GetMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> getAllTodo() throws ResourceNotFoundException {
-        List<TodoDto> save = todoService.getTodoByUser(1);
+        List<TodoDto> save = todoService.getTodoByUser(CommonUtil.getLoggedInUser().getId());
         if (CollectionUtils.isEmpty(save)) {
             return ResponseEntity.noContent().build();
         }
