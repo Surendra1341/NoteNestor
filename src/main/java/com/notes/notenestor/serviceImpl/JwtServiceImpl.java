@@ -78,9 +78,9 @@ public class JwtServiceImpl implements JwtService {
                     .build()
                     .parseClaimsJws(token)
                     .getPayload();
-        }catch (ExpiredJwtException e) {
+        } catch (ExpiredJwtException e) {
             throw new JwtTokenExpiredException("Token has expired");
-        }catch (JwtException e) {
+        } catch (JwtException e) {
             throw new JwtTokenExpiredException("invalid token");
         }
     }
