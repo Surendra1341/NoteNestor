@@ -1,12 +1,18 @@
 package com.notes.notenestor.util;
 
+import com.notes.notenestor.config.security.CustomUserDetails;
+import com.notes.notenestor.dto.UserResponse;
+import com.notes.notenestor.entity.User;
 import com.notes.notenestor.handler.GenericResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.io.FilenameUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class CommonUtil {
+
+
 
 
     public static ResponseEntity<?> createBuildResponse(Object data, HttpStatus responseStatus) {
@@ -82,4 +88,13 @@ public class CommonUtil {
         String path = request.getServletPath();  //  /api/v1/auth/
         return fullUrl.replace(path, "");  //  http://localhost:8080
     }
+
+        public static User getLoggedInUser() {
+        try {
+            CustomUserDetails loggedUser = (CustomUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            return loggedUser.getUser();
+        }catch (Exception e) {
+            throw e;
+        }
+        }
 }

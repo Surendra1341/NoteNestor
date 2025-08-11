@@ -1,8 +1,11 @@
 package com.notes.notenestor.serviceImpl;
 
 import com.notes.notenestor.entity.User;
+import com.notes.notenestor.exception.JwtTokenExpiredException;
 import com.notes.notenestor.service.JwtService;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -68,11 +71,18 @@ public class JwtServiceImpl implements JwtService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser()
-                .verifyWith(decryptKey(secretKey))
-                .build()
-                .parseClaimsJws(token)
-                .getPayload();
+
+        try {
+            return Jwts.parser()
+                    .verifyWith(decryptKey(secretKey))
+                    .build()
+                    .parseClaimsJws(token)
+                    .getPayload();
+        }catch (ExpiredJwtException e) {
+            throw new JwtTokenExpiredException("Token has expired");
+        }catch (JwtException e) {
+            throw new JwtTokenExpiredException("invalid token");
+        }
     }
 
     private SecretKey decryptKey(String secretKey) {

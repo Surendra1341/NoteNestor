@@ -3,7 +3,7 @@ package com.notes.notenestor.util;
 
 import com.notes.notenestor.dto.CategoryDto;
 import com.notes.notenestor.dto.TodoDto;
-import com.notes.notenestor.dto.UserDto;
+import com.notes.notenestor.dto.UserRequest;
 import com.notes.notenestor.enums.TodoStatus;
 import com.notes.notenestor.exception.ExistDataException;
 import com.notes.notenestor.exception.ResourceNotFoundException;
@@ -87,19 +87,19 @@ public class Validation {
     }
 
 
-    public void userValidation(UserDto userDto) {
+    public void userValidation(UserRequest userRequest) {
 
         // name validate
-        if (!StringUtils.hasText(userDto.getName())) {
+        if (!StringUtils.hasText(userRequest.getName())) {
             throw new IllegalArgumentException(" name is invalid");
         }
 
 
-        if (!StringUtils.hasText(userDto.getEmail()) || !userDto.getEmail().matches(Constants.EMAIL_REGEX)) {
+        if (!StringUtils.hasText(userRequest.getEmail()) || !userRequest.getEmail().matches(Constants.EMAIL_REGEX)) {
             throw new IllegalArgumentException("email is invalid");
         } else {
             // validate email exist
-            Boolean existEmail = userRepo.existsByEmail(userDto.getEmail());
+            Boolean existEmail = userRepo.existsByEmail(userRequest.getEmail());
             if (existEmail) {
                 throw new ExistDataException("Email already exist");
             }

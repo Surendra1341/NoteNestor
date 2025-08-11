@@ -11,6 +11,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,6 +30,7 @@ public class NotesController {
 
     // save or update
     @PostMapping("/")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file) throws ResourceNotFoundException, IOException {
 
         Boolean saved = service.saveNote(notes, file);
@@ -41,6 +43,7 @@ public class NotesController {
 
     // ye admin use ke lye hai
     @GetMapping("/")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllNotes() throws ResourceNotFoundException {
 
         List<NotesDto> notes = service.getAllNotes();
@@ -53,6 +56,7 @@ public class NotesController {
 
 
     @GetMapping("/download/{id}")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> downloadFile(@PathVariable Integer id) throws ResourceNotFoundException, IOException {
         FileDetails fileDetails = notesService.getFileDetails(id);
         byte[] downloadFile = notesService.downloadFile(fileDetails);
@@ -67,13 +71,14 @@ public class NotesController {
 
 
     @GetMapping("/user-notes")
+    @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> getAllNotesByUser(
             @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
             @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
 
     ) throws ResourceNotFoundException {
         // yha pageNo. follow index type rule
-        Integer userID = 1;
+        Integer userID = CommonUtil.getLoggedInUser().getId();
 
 
         NotesResponse notes = service.getAllNotesByUser(userID, pageNo, pageSize);
@@ -100,7 +105,7 @@ public class NotesController {
 
     @GetMapping("/recycle-bin")
     public ResponseEntity<?> getUserRecycleNotes() throws ResourceNotFoundException {
-        Integer userID = 1;
+        Integer userID = CommonUtil.getLoggedInUser().getId();
         List<NotesDto> notes = notesService.getUserRecycleBInNotes(userID);
 
         if (CollectionUtils.isEmpty(notes)) {
@@ -119,8 +124,8 @@ public class NotesController {
     }
 
     @DeleteMapping("/delete-recycle")
-    public ResponseEntity<?> emptyRecycleBin() throws ResourceNotFoundException {
-        int userID = 1;
+    public ResponseEntity<?> emptyUserRecycleBin() throws ResourceNotFoundException {
+        int userID = CommonUtil.getLoggedInUser().getId();
         notesService.emptyRecycleBin(userID);
         return CommonUtil.createBuildResponseMessage("Delete success :)", HttpStatus.OK);
     }

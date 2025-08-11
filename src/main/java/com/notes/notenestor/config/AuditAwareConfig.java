@@ -1,5 +1,6 @@
 package com.notes.notenestor.config;
 
+import com.notes.notenestor.util.CommonUtil;
 import org.springframework.data.domain.AuditorAware;
 
 import java.util.Optional;
@@ -10,7 +11,6 @@ public class AuditAwareConfig implements AuditorAware<Integer> {
     @Override
     public Optional<Integer> getCurrentAuditor() {
         //dynamic it
-
-        return Optional.of(1);  //hard code
+        return Optional.of(CommonUtil.getLoggedInUser().getId());
     }
 }
