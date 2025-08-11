@@ -2,9 +2,9 @@ package com.notes.notenestor.controller;
 
 import com.notes.notenestor.dto.LoginRequest;
 import com.notes.notenestor.dto.LoginResponse;
-import com.notes.notenestor.dto.UserDto;
+import com.notes.notenestor.dto.UserRequest;
 import com.notes.notenestor.exception.ResourceNotFoundException;
-import com.notes.notenestor.service.UserService;
+import com.notes.notenestor.service.AuthService;
 import com.notes.notenestor.util.CommonUtil;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,13 +24,13 @@ import java.io.UnsupportedEncodingException;
 public class AuthController {
 
     @Autowired
-    private UserService userService;
+    private AuthService authService;
 
 
     @PostMapping("/")
-    public ResponseEntity<?> register(@RequestBody UserDto userDto, HttpServletRequest request) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
+    public ResponseEntity<?> register(@RequestBody UserRequest userRequest, HttpServletRequest request) throws ResourceNotFoundException, MessagingException, UnsupportedEncodingException {
         String url = CommonUtil.getUrl(request);
-        Boolean result = userService.register(userDto, url);
+        Boolean result = authService.register(userRequest, url);
 
         if (result) {
             return CommonUtil.createBuildResponseMessage("Register success", HttpStatus.OK);
@@ -41,7 +41,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody  LoginRequest loginRequest) throws Exception {
 
-        LoginResponse loginResponse = userService.login(loginRequest);
+        LoginResponse loginResponse = authService.login(loginRequest);
         if (ObjectUtils.isEmpty(loginResponse)) {
             return CommonUtil.createErrorResponseMessage("invalid credential", HttpStatus.BAD_REQUEST);
         }
