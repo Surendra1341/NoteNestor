@@ -6,6 +6,7 @@ import com.notes.notenestor.dto.UserResponse;
 import com.notes.notenestor.entity.User;
 import com.notes.notenestor.service.UserService;
 import com.notes.notenestor.util.CommonUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
+@Tag(name="After Auth done",description = "Some User special need")
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {

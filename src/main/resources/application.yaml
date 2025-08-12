@@ -30,6 +30,7 @@ spring:
           auth: true
           starttls:
             enable: true
+
   profiles:
     active: dev
 
@@ -37,3 +38,27 @@ file:
   upload:
     path: files/
 
+# use for enhance --> add by Ai
+springdoc:
+  api-docs:
+    path: /NoteNester-api-doc   # default, but explicit
+  swagger-ui:
+    path: /NoteNester-doc
+    operations-sorter: method   # Sort GET, POST, PUT, DELETE order
+    tags-sorter: alpha          # Sort tags alphabetically
+    doc-expansion: none         # Collapse endpoints by default
+    display-request-duration: true
+    filter: true                 # Search bar in Swagger UI
+
+# Actuator configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # Expose all actuator endpoints
+        exclude: beans,loggers
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always
