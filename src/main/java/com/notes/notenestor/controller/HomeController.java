@@ -5,8 +5,11 @@ import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.service.HomeService;
 import com.notes.notenestor.service.UserService;
 import com.notes.notenestor.util.CommonUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,9 +17,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.UnsupportedEncodingException;
 
+
+@Tag(name="Some User operation",description = "basic user level Apis")
 @RestController
 @RequestMapping("/api/v1/home")
 public class HomeController {
+
+    // slf4j
+    Logger log =  LoggerFactory.getLogger(HomeController.class);
+
 
     @Autowired
     private HomeService homeService;
@@ -26,6 +35,7 @@ public class HomeController {
 
     @GetMapping("/verify")
     public ResponseEntity<?> verifyUserAccount(@RequestParam Integer uid, @RequestParam String token) throws ResourceNotFoundException {
+        log.info("HomeController  :: verifyUserAccount :: Execution of verifyUserAccount" );
         Boolean result = homeService.verifyUserAccount(uid, token);
         if (result) {
             return CommonUtil.createBuildResponseMessage("Account Verification successfully", HttpStatus.OK);

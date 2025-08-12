@@ -4,7 +4,9 @@ import com.notes.notenestor.config.security.CustomUserDetails;
 import com.notes.notenestor.dto.*;
 import com.notes.notenestor.entity.AccountStatus;
 import com.notes.notenestor.entity.User;
+import com.notes.notenestor.exception.ExistDataException;
 import com.notes.notenestor.exception.ResourceNotFoundException;
+import com.notes.notenestor.exception.ValidationException;
 import com.notes.notenestor.repository.UserRepo;
 import com.notes.notenestor.service.AuthService;
 import com.notes.notenestor.service.JwtService;
@@ -83,12 +85,20 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public LoginResponse login(LoginRequest loginRequest) {
+
+
+
         Authentication authenticate = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
 
         if (authenticate.isAuthenticated()) {
             CustomUserDetails userDetails = (CustomUserDetails) authenticate.getPrincipal();
+
+            // account active or not check
+//            if(!userRepo.findByEmail(userDetails.getUsername()).getStatus().getIsActive()) {
+//                throw new ExistDataException("please active your account via email");
+//            }
 
             String token = jwtService.generateToken(userDetails.getUser());
             LoginResponse loginResponse = LoginResponse.builder()

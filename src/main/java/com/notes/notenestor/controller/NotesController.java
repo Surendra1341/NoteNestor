@@ -1,11 +1,16 @@
 package com.notes.notenestor.controller;
 
 import com.notes.notenestor.dto.NotesDto;
+import com.notes.notenestor.dto.NotesRequest;
 import com.notes.notenestor.dto.NotesResponse;
 import com.notes.notenestor.entity.FileDetails;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.service.NotesService;
 import com.notes.notenestor.util.CommonUtil;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +24,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+import static com.notes.notenestor.util.Constants.DEFAULT_PAGE_NO;
+import static com.notes.notenestor.util.Constants.DEFAULT_PAGE_SIZE;
+
+@Tag(name="Notes Related",description = "All the Notes  APIs")
 @RestController
 @RequestMapping("/api/v1/notes")
 public class NotesController {
@@ -29,9 +38,11 @@ public class NotesController {
     private NotesService notesService;
 
     // save or update
-    @PostMapping("/")
+    @PostMapping(value = "/",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
-    public ResponseEntity<?> saveNotes(@RequestParam String notes, @RequestParam(required = false) MultipartFile file) throws ResourceNotFoundException, IOException {
+    public ResponseEntity<?> saveNotes(@RequestParam
+                                           @Parameter(description = "Json String Notes",required = true,content = @Content(schema = @Schema(implementation = NotesRequest.class)))
+                                           String notes, @RequestParam(required = false) MultipartFile file) throws ResourceNotFoundException, IOException {
 
         Boolean saved = service.saveNote(notes, file);
         if (saved) {
@@ -73,8 +84,8 @@ public class NotesController {
     @GetMapping("/user-notes")
     @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> getAllNotesByUser(
-            @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+            @RequestParam(name = "pageNo", defaultValue = DEFAULT_PAGE_NO) Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize
 
     ) throws ResourceNotFoundException {
         // yha pageNo. follow index type rule
@@ -91,8 +102,8 @@ public class NotesController {
     @PreAuthorize("hasAnyRole('ROLE_USER','ADMIN')")
     public ResponseEntity<?> getAllNotesBySearch(
             @RequestParam(name = "keyword",defaultValue = "") String keyword,
-            @RequestParam(name = "pageNo", defaultValue = "0") Integer pageNo,
-            @RequestParam(name = "pageSize", defaultValue = "10") Integer pageSize
+            @RequestParam(name = "pageNo", defaultValue = DEFAULT_PAGE_NO) Integer pageNo,
+            @RequestParam(name = "pageSize", defaultValue = DEFAULT_PAGE_SIZE) Integer pageSize
 
     ) throws ResourceNotFoundException {
         // yha pageNo. follow index type rule

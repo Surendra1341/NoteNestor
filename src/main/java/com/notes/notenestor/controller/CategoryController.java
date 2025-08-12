@@ -5,6 +5,7 @@ import com.notes.notenestor.dto.CategoryResponse;
 import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.service.CategoryService;
 import com.notes.notenestor.util.CommonUtil;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name="Category Related",description = "All the category APIs")
 @RestController
 @RequestMapping("/api/v1/category")
 public class CategoryController {

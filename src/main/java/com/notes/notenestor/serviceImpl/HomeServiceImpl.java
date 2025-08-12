@@ -5,10 +5,11 @@ import com.notes.notenestor.exception.ResourceNotFoundException;
 import com.notes.notenestor.exception.SuccessException;
 import com.notes.notenestor.repository.UserRepo;
 import com.notes.notenestor.service.HomeService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
+@Slf4j
 @Service
 public class HomeServiceImpl implements HomeService {
 
@@ -18,6 +19,7 @@ public class HomeServiceImpl implements HomeService {
 
     @Override
     public Boolean verifyUserAccount(Integer uid, String token) throws ResourceNotFoundException {
+        log.info("HomeServiceImpl  :: verifyUserAccount  ::" + uid);
         User user = userRepo.findById(uid).orElseThrow(() -> new ResourceNotFoundException("Invalid user"));
 
         if (user.getStatus().getVerificationCode() == null) {
