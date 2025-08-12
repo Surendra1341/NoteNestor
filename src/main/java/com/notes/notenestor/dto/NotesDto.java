@@ -21,7 +21,6 @@ public class NotesDto {
 
     private String description;
 
-    @ManyToOne
     private CategoryDto category;
 
     private FileDto fileDetails;
