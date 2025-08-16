@@ -1,4 +1,4 @@
-# NoteNestor
+# 📝  NoteNestor
 
 **Smart Notes & Todo Management API**
 
