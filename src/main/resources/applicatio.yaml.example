@@ -1,0 +1,64 @@
+spring:
+  application:
+    name: NoteNestor
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/${DB_NAME:enotes_db}
+    username: ${DB_USER:root}
+    password: ${DB_PASSWORD:password}
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+    hibernate:
+      ddl-auto: update
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
+  mail:
+    host: ${MAIL_HOST:smtp.gmail.com}
+    port: ${MAIL_PORT:587}
+    username: ${MAIL_USER:your_email}
+    password: ${MAIL_PASSWORD:your_password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+  profiles:
+    active: dev
+
+file:
+  upload:
+    path: files/
+
+# Swagger / OpenAPI
+springdoc:
+  api-docs:
+    path: /NoteNestor-api-doc
+  swagger-ui:
+    path: /NoteNestor-doc
+    operations-sorter: method
+    tags-sorter: alpha
+    doc-expansion: none
+    display-request-duration: true
+    filter: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: beans,loggers
+  endpoint:
+    shutdown:
+      enabled: true
+    health:
+      show-details: always

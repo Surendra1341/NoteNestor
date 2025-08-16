@@ -1,2 +1,6 @@
 /mvnw text eol=lf
 *.cmd text eol=crlf
+
+# Spring Boot config
+src/main/resources/application.yml
+
