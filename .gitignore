@@ -1,5 +1,8 @@
 HELP.md
 target/
+# Local Spring configuration can contain credentials. Keep it out of Git.
+src/main/resources/application.yml
+src/main/resources/application.yaml
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
